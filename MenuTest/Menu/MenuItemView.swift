@@ -244,3 +244,86 @@ public class ShortcutMenuItemView: UIView, MenuItemView, MenuThemeable {
         updateHighlightState(highlighted)
     }
 }
+
+public class SelectableMenuItemView: UIView, MenuItemView, MenuThemeable {
+    private let nameLabel = UILabel()
+    private let isSelectedView = UIView()
+
+    public init(item: SelectableMenuItem) {
+        super.init(frame: .zero)
+        nameLabel.text = item.name
+        addSubview(nameLabel)
+        nameLabel.textColor = .black
+        nameLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(4)
+            make.left.equalToSuperview().offset(26)
+            make.right.lessThanOrEqualToSuperview().offset(-10)
+        }
+
+        if item.isSelected {
+            addSubview(isSelectedView)
+            isSelectedView.clipsToBounds = true
+            isSelectedView.layer.cornerRadius = 5
+
+            nameLabel.snp.makeConstraints { make in
+                make.left.equalTo(isSelectedView.snp.right).offset(8)
+            }
+            isSelectedView.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.left.equalToSuperview().inset(8)
+                make.width.height.equalTo(10)
+            }
+            isSelectedView.setContentHuggingPriority(.required, for: .horizontal)
+        }
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    public func startSelectionAnimation(completion: @escaping () -> Void) {
+        updateHighlightState(false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.updateHighlightState(true)
+            completion()
+        }
+    }
+
+    // MARK: - Menu Item View
+
+    public var highlighted: Bool = false {
+        didSet {
+            updateHighlightState(highlighted)
+
+            if highlighted == true && oldValue == false {
+                didHighlight()
+            }
+        }
+    }
+
+    public var highlightPosition: CGPoint = .zero
+
+    public var didHighlight: () -> Void = {}
+
+    public var updateLayout: () -> Void = {}
+
+    // MARK: - Themeable Helpers
+
+    private var highlightedBackgroundColor: UIColor = .clear
+
+    private func updateHighlightState(_ highlighted: Bool) {
+        nameLabel.isHighlighted = highlighted
+        backgroundColor = highlighted ? highlightedBackgroundColor : .clear
+    }
+
+    // MARK: - Themeable
+
+    public func applyTheme(_ theme: MenuTheme) {
+        nameLabel.font = theme.font
+        nameLabel.textColor = theme.textColor
+        nameLabel.highlightedTextColor = theme.highlightedTextColor
+        highlightedBackgroundColor = theme.highlightedBackgroundColor
+        isSelectedView.backgroundColor = theme.highlightedBackgroundColor
+        updateHighlightState(highlighted)
+    }
+}

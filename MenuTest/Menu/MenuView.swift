@@ -16,18 +16,15 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
     public static let menuWillPresent = Notification.Name("CodeaMenuWillPresent")
     
     private let titleLabel = UILabel()
+    private let imageView = UIImageView()
     private let gestureBarView = UIView()
     private let tintView = UIView()
     private let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private let feedback = UISelectionFeedbackGenerator()
     
-    public var title: String {
-        didSet {
-            titleLabel.text = title
-            contents?.title = title
-        }
-    }
-    
+    public var title: String?
+    public var image: UIImage?
+
     private var menuPresentationObserver: Any!
     
     private var contents: MenuContents?
@@ -53,18 +50,21 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
         }
     }
     
-    public init(title: String, theme: MenuTheme, itemsSource: @escaping () -> [MenuItem]) {
+    public init(title: String? = nil, image: UIImage? = nil, theme: MenuTheme, itemsSource: @escaping () -> [MenuItem]) {
         self.itemsSource = itemsSource
         self.title = title
+        self.image = image
         self.theme = theme
         
         super.init(frame: .zero)
-        
+
         titleLabel.text = title
         titleLabel.textColor = theme.darkTintColor
         titleLabel.textAlignment = .center
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)
-        
+        contents?.title = title
+        imageView.image = image
+
         let clippingView = UIView()
         clippingView.clipsToBounds = true
         
@@ -87,7 +87,6 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
         }
         
         effectView.contentView.addSubview(tintView)
-        effectView.contentView.addSubview(titleLabel)
         effectView.contentView.addSubview(gestureBarView)
         
         tintView.snp.makeConstraints {
@@ -95,14 +94,25 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
             
             make.edges.equalToSuperview()
         }
-        
-        titleLabel.snp.makeConstraints {
-            make in
-            
-            make.left.right.equalToSuperview().inset(12)
-            make.centerY.equalToSuperview()
+
+        if self.title != nil {
+            effectView.contentView.addSubview(titleLabel)
+            titleLabel.snp.makeConstraints {
+                make in
+
+                make.left.right.equalToSuperview().inset(12)
+                make.centerY.equalToSuperview()
+            }
+        } else if self.image != nil {
+            effectView.contentView.addSubview(imageView)
+            imageView.snp.makeConstraints {
+                make in
+
+                make.left.right.equalToSuperview().inset(12)
+                make.centerY.equalToSuperview()
+            }
         }
-        
+
         gestureBarView.layer.cornerRadius = 1.0
         gestureBarView.snp.makeConstraints {
             make in
@@ -198,7 +208,7 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
                     [weak self] menuItem in
                     
                     self?.hideContents(animated: true)
-                    
+
                     menuItem.performAction()
                 })
             } else {
@@ -206,7 +216,7 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
             }
         }
     }
-    
+
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == longPress && otherGestureRecognizer == tapGesture {
             return true
@@ -217,7 +227,7 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
     public func showContents() {
         NotificationCenter.default.post(name: MenuView.menuWillPresent, object: self)
         
-        let contents = MenuContents(name: title, items: itemsSource(), theme: theme)
+        let contents = MenuContents(name: title, image: image, items: itemsSource(), theme: theme)
         
         for view in contents.stackView.arrangedSubviews {
             if let view = view as? MenuItemView {
