@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let menu = MenuView(title: nil, image: #imageLiteral(resourceName: "button_icon"), theme: LightMenuTheme(), itemsSource: { [weak self]  () -> [MenuItem] in
+        let menu = MenuView(title: MenuView.Title.image(#imageLiteral(resourceName: "button_icon")), theme: LightMenuTheme(), itemsSource: { [weak self]  () -> [MenuItem] in
             return [
                 SelectableMenuItem(name: "Item 1", isSelected: self?.selectedGroup0 == 0, group: 0) { [weak self] in
                     self?.selectedGroup0 = 0
