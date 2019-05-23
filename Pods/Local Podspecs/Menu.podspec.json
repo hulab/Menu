@@ -1,6 +1,6 @@
 {
   "name": "Menu",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "summary": "The iOS Menu.",
   "description": "The iOS Menu is a macOS style menu framework for iOS. It provides gesture and tap-based access to menu items, support for keyboard shortcuts, and a themeable, iOS-inspired design.",
   "homepage": "https://github.com/TwoLivesLeft/Menu",
@@ -21,16 +21,17 @@
   },
   "source": {
     "git": "https://github.com/TwoLivesLeft/Menu.git",
-    "tag": "0.0.1"
+    "tag": "0.0.4"
   },
   "source_files": [
     "MenuTest/Menu/*.swift",
     "MenuTest/Util/*.swift"
   ],
-  "swift_version": "4.2",
+  "swift_versions": "4.2",
   "dependencies": {
     "SnapKit": [
 
     ]
-  }
+  },
+  "swift_version": "4.2"
 }

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = "Menu"
-  spec.version      = "0.0.4"
+  spec.version      = "0.0.5"
   spec.summary      = "The iOS Menu."
 
   # This description is used to generate tags and improve search results.
@@ -33,7 +33,7 @@ Pod::Spec.new do |spec|
 
   spec.source       = { :git => "https://github.com/TwoLivesLeft/Menu.git", :tag => "#{spec.version}" }
   spec.source_files  = "MenuTest/Menu/*.swift", "MenuTest/Util/*.swift"
-  spec.swift_version = '4.2'
+  spec.swift_version = '5.0'
 
   spec.dependency "SnapKit"
 
