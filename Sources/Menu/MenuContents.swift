@@ -31,7 +31,9 @@ class MenuContents: UIView {
     let stackView: UIStackView
     
     private let titleLabel = UILabel()
-    
+
+    private let imageView = UIImageView()
+
     private let radius: CGFloat
     
     private var edgeScrollTimer: Timer?
@@ -157,7 +159,7 @@ class MenuContents: UIView {
         }
     }
     
-    init(name: String, items: [MenuItem], theme: MenuTheme, maxHeight: CGFloat = 300, radius: CGFloat = 8.0) {
+    init(name: String?, image: UIImage?, items: [MenuItem], theme: MenuTheme, maxHeight: CGFloat = 300, radius: CGFloat = 8.0) {
 
         let itemViews: [MenuViewType] = items.map {
             let item = $0.view
@@ -174,6 +176,7 @@ class MenuContents: UIView {
         super.init(frame: .zero)
         
         titleLabel.text = name
+        imageView.image = image
         
         addSubview(shadowView)
         
@@ -193,6 +196,7 @@ class MenuContents: UIView {
         
         effectView.contentView.addSubview(tintView)
         effectView.contentView.addSubview(titleLabel)
+        effectView.contentView.addSubview(imageView)
         effectView.contentView.addSubview(scrollContainer)
         
         scrollContainer.addSubview(scrollView)
@@ -314,7 +318,12 @@ class MenuContents: UIView {
             
             make.center.equalTo(superview)
         }
-        
+        imageView.snp.remakeConstraints {
+            make in
+
+            make.center.equalTo(superview)
+        }
+
         scrollView.scrollIndicatorInsets = UIEdgeInsets(top: radius + 6, left: 0, bottom: 6, right: 0)
         scrollView.contentInset = UIEdgeInsets(top: radius + 6, left: 0, bottom: 6, right: 0)
         

@@ -103,3 +103,29 @@ public extension ShortcutMenuItem {
         return nil
     }
 }
+
+public class SelectableMenuItem: Equatable, MenuItem {
+    public let name: String!
+    public var isSelected: Bool!
+    public var action: () -> Void = {}
+    public let group: Int
+
+    public init(name: String, isSelected: Bool = false, group: Int = 0, action: @escaping () -> Void) {
+        self.name = name
+        self.isSelected = isSelected
+        self.group = group
+        self.action = action
+    }
+
+    public var view: MenuItem.MenuViewType {
+        return SelectableMenuItemView(item: self)
+    }
+
+    public static func == (lhs: SelectableMenuItem, rhs: SelectableMenuItem) -> Bool {
+        return lhs.name == rhs.name && lhs.isSelected == rhs.isSelected
+    }
+
+    public func performAction() {
+        action()
+    }
+}
