@@ -356,10 +356,14 @@ public class MenuView: UIView, MenuThemeable, UIGestureRecognizerDelegate {
     public func applyTheme(_ theme: MenuTheme) {
         self.theme = theme
         
-        titleLabel.font = theme.font
-        titleLabel.textColor = theme.darkTintColor
+        titleLabel.font = theme.titleFont
+        titleLabel.textColor = theme.titleTextColor
         gestureBarView.backgroundColor = theme.gestureBarTint
-        tintView.backgroundColor = theme.backgroundTint
+        if theme.blurEffect != nil {
+            tintView.backgroundColor = theme.backgroundTint
+        } else {
+            tintView.backgroundColor = UIColor.clear
+        }
         effectView.effect = theme.blurEffect
         
         contents?.applyTheme(theme)

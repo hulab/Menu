@@ -45,7 +45,7 @@ class SeparatorMenuItemView: UIView, MenuItemView, MenuThemeable {
             
             make.left.right.equalToSuperview()
             make.height.equalTo(1)
-            make.top.bottom.equalToSuperview().inset(2)
+            make.top.bottom.equalToSuperview().inset(6)
         }
     }
     
@@ -227,8 +227,8 @@ public class ShortcutMenuItemView: UIView, MenuItemView, MenuThemeable {
     //MARK: - Themeable
     
     public func applyTheme(_ theme: MenuTheme) {
-        nameLabel.font = theme.font
-        nameLabel.textColor = theme.textColor
+        nameLabel.font = theme.menuFont
+        nameLabel.textColor = theme.menuTextColor
         nameLabel.highlightedTextColor = theme.highlightedTextColor
         
         highlightedBackgroundColor = theme.highlightedBackgroundColor
@@ -236,8 +236,8 @@ public class ShortcutMenuItemView: UIView, MenuItemView, MenuThemeable {
         shortcutLabels.forEach {
             label in
             
-            label.font = theme.font
-            label.textColor = theme.textColor
+            label.font = theme.menuFont
+            label.textColor = theme.menuTextColor
             label.highlightedTextColor = theme.highlightedTextColor
         }
         
@@ -319,8 +319,8 @@ public class SelectableMenuItemView: UIView, MenuItemView, MenuThemeable {
     // MARK: - Themeable
 
     public func applyTheme(_ theme: MenuTheme) {
-        nameLabel.font = theme.font
-        nameLabel.textColor = theme.textColor
+        nameLabel.font = theme.menuFont
+        nameLabel.textColor = theme.menuTextColor
         nameLabel.highlightedTextColor = theme.highlightedTextColor
         highlightedBackgroundColor = theme.highlightedBackgroundColor
         isSelectedView.backgroundColor = theme.highlightedBackgroundColor
