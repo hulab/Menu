@@ -32,7 +32,11 @@ class MenuContents: UIView {
     
     private let titleLabel = UILabel()
 
-    private let imageView = UIImageView()
+    private var imageView = UIImageView() {
+        didSet {
+            imageView.contentMode = .scaleAspectFit
+        }
+    }
 
     private let radius: CGFloat
     
@@ -52,12 +56,28 @@ class MenuContents: UIView {
         }
     }
     
-    var title: String? {
+    var title: MenuView.Title? {
         get {
-            return titleLabel.text
+            let title: MenuView.Title?
+            if let text = titleLabel.text {
+                title = .text(text)
+            } else if let image = imageView.image {
+                title = .image(image)
+            } else {
+                title = nil
+            }
+            return title
         }
         set {
-            titleLabel.text = newValue
+            switch newValue {
+            case .text(let text)?:
+                titleLabel.text = text
+            case .image(let image)?:
+                imageView.image = image
+            case nil:
+                titleLabel.text = nil
+                imageView.image = nil
+            }
         }
     }
     
@@ -159,7 +179,7 @@ class MenuContents: UIView {
         }
     }
     
-    init(name: String?, image: UIImage?, items: [MenuItem], theme: MenuTheme, maxHeight: CGFloat = 300, radius: CGFloat = 8.0) {
+    init(title: MenuView.Title, items: [MenuItem], theme: MenuTheme, maxHeight: CGFloat = 300, radius: CGFloat = 8.0) {
 
         let itemViews: [MenuViewType] = items.map {
             let item = $0.view
@@ -172,12 +192,10 @@ class MenuContents: UIView {
         self.maxHeight = maxHeight
         self.items = items
         self.radius = radius
-        
+
         super.init(frame: .zero)
-        
-        titleLabel.text = name
-        imageView.image = image
-        
+        self.title = title
+
         addSubview(shadowView)
         
         shadowView.snp.makeConstraints {
